@@ -18,6 +18,11 @@ enum UserRole {
   USER
 }
 
+enum TransactionType {
+  DEBIT
+  CREDIT
+}
+
 model User {
   id             String          @id @default(auto()) @map("_id") @db.ObjectId
   name           String?
@@ -25,7 +30,7 @@ model User {
   hashedPassword String?
   emailVerified  DateTime?
   image          String?
-  role           UserRole?       @default(ADMIN)
+  role           UserRole?       @default(USER)
   accounts       Account[]
   sessions       Session[]
   // Optional for WebAuthn support
@@ -91,4 +96,23 @@ model Authenticator {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, credentialID])
+}
+
+model Transaction {
+  id             String          @id @default(auto()) @map("_id") @db.ObjectId
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
+model Currency {
+  id             String          @id @default(auto()) @map("_id") @db.ObjectId
+  name           String          @unique
+  code           String          @unique
+  symbol          String          @unique
+  
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

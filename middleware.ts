@@ -4,7 +4,9 @@ import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 import { auth } from "./auth"
 
-const protectedRoutes = ['/middleware']
+
+//сюди вписати протектед роути
+const protectedRoutes = ['/admin']
 
 export default async function middleware(request: NextRequest) {
     const session = await auth()

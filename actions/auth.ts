@@ -37,9 +37,9 @@ export const loginWithCredentials = async (formData: FormData) => {
         redirectTo: '/'
     }
 
-    const user = await getUserByEmail(rawFormData.email as string);
-    console.log(user)
+    //const user = await getUserByEmail(rawFormData.email as string); 
     
+
     try{
         await signIn('credentials', rawFormData)
     }catch(e){
