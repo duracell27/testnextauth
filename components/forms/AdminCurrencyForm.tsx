@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from "react";
+import React, { ReactNode, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -14,7 +14,7 @@ import { Input } from "../ui/input";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { addCurrency } from "@/actions/currency";
+import { addCurrency, editCurrency } from "@/actions/currency";
 import { toast } from "sonner";
 
 // Описуємо схему валідації за допомогою Zod
@@ -26,7 +26,7 @@ const currencySchema = z.object({
 
 type CurrencyFormValues = z.infer<typeof currencySchema>;
 
-const AdminCurrencyForm = () => {
+const AdminCurrencyForm = ({title, edit, data, id}:{title: string | ReactNode, edit?: boolean, data?: CurrencyFormValues, id?:string}) => {
   const [isOpen, setIsOpen] = useState(false); // Контроль видимості діалогу
 
   // Налаштовуємо react-hook-form із zodResolver
@@ -42,8 +42,13 @@ const AdminCurrencyForm = () => {
   // Обробник форми
   const onSubmit = async (data: CurrencyFormValues) => {
     try {
-      await addCurrency(data); // Виклик API для додавання валюти
-      toast("Валюта успішно додана!");
+      if(edit){
+        await editCurrency(data, id!)
+        toast("Валюта успішно відредагована!");
+      }else{
+        await addCurrency(data); // Виклик API для додавання валюти
+        toast("Валюта успішно додана!");
+      }
       reset(); // Очищення форми
       setIsOpen(false); // Закриття діалогу
     } catch (error) {
@@ -55,14 +60,14 @@ const AdminCurrencyForm = () => {
   return (
     <div>
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogTrigger asChild>
-          <Button onClick={() => setIsOpen(true)}>Додати валюту</Button>
+        <DialogTrigger className="mb-4" asChild>
+          <Button onClick={() => setIsOpen(true)}>{title}</Button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Тут можна додати нову валюту в програму</DialogTitle>
+            <DialogTitle>{edit ? (<span>Тут можна відредагувати валюту</span>):(<span>Тут можна додати нову валюту в програму</span>)}</DialogTitle>
             <DialogDescription>
-              Заповніть три поля і натисніть кнопку додати
+            {edit ? (<span>Відредагуйте поля</span>):(<span>Заповніть три поля і натисніть кнопку додати</span>)}
             </DialogDescription>
           </DialogHeader>
           {/* Форма */}
@@ -75,6 +80,7 @@ const AdminCurrencyForm = () => {
               <Input
                 placeholder="Назва валюти"
                 {...register("name")}
+                defaultValue={edit? data?.name :""}
                 className={errors.name ? "border-red-500" : ""}
               />
               {errors.name && (
@@ -87,6 +93,7 @@ const AdminCurrencyForm = () => {
               <Input
                 placeholder="Код валюти (3 символи)"
                 {...register("code")}
+                defaultValue={edit? data?.code :""}
                 className={errors.code ? "border-red-500" : ""}
               />
               {errors.code && (
@@ -99,6 +106,7 @@ const AdminCurrencyForm = () => {
               <Input
                 placeholder="Символ валюти"
                 {...register("symbol")}
+                defaultValue={edit? data?.symbol :""}
                 className={errors.symbol ? "border-red-500" : ""}
               />
               {errors.symbol && (
@@ -107,7 +115,7 @@ const AdminCurrencyForm = () => {
             </div>
 
             {/* Кнопка додати */}
-            <Button type="submit">Додати</Button>
+            <Button type="submit">{edit?'Редагувати':'Додати'}</Button>
           </form>
         </DialogContent>
       </Dialog>
