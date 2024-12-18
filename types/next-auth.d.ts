@@ -12,3 +12,5 @@ declare module 'next-auth' {
     role?: string; // Додайте `role` до JWT
   }
 }
+
+

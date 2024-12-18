@@ -19,7 +19,7 @@ const Confirm = ({
 }: {
   title: string | ReactNode;
   id?: string;
-  fn?: (id: string) => {};
+  fn?: (id: string) => void;
   actionButtonTitle: string;
 }) => {
   const [isOpen, setIsOpen] = useState(false); // Контроль видимості діалогу

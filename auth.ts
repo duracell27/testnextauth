@@ -7,6 +7,23 @@ import bcrypt from 'bcryptjs'
 import { db } from "./db";
 import { saltAndHashPassword } from "./utils/helper";
 
+
+
+declare module "next-auth" {
+  interface User {
+    // Add your additional properties here:
+    role: string | null;
+    
+  }
+}
+
+declare module "@auth/core/adapters" {
+  interface AdapterUser {
+    // Add your additional properties here:
+    role: string | null;
+  }
+}
+
 export const {
   handlers: { GET, POST },
   signIn,
@@ -65,7 +82,7 @@ export const {
   ],
   callbacks: {
     session: async ({ session, token }) => {
-      if (session?.user) {
+      if (session.user) {
         session.user.id = token.sub;
         session.user.role = token.role
       }

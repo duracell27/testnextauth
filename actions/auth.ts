@@ -1,7 +1,7 @@
 "use server";
 import { signIn, signOut } from "@/auth";
 import { db } from "@/db";
-import { AuthError } from "next-auth";
+// import { AuthError } from "next-auth";
 
 import { revalidatePath } from "next/cache";
 
@@ -30,31 +30,29 @@ export const logout = async () => {
 };
 
 export const loginWithCredentials = async (formData: FormData) => {
-    const rawFormData = {
-        email: formData.get('email'),
-        password: formData.get('password'),
-        role: 'ADMIN',
-        redirectTo: '/'
-    }
+  const rawFormData = {
+    email: formData.get("email"),
+    password: formData.get("password"),
+    role: "ADMIN",
+    redirectTo: "/",
+  };
 
-    //const user = await getUserByEmail(rawFormData.email as string); 
-    
+  const existingUser = await getUserByEmail(formData.get("email") as string);
+  console.log(existingUser);
 
-    try{
-        await signIn('credentials', rawFormData)
-    }catch(e){
-        if(e instanceof AuthError) {
-            switch (e.type) {
-                case 'CredentialsSignin': {
-                    return {error: 'Invalid email or password'}
-                };
-                default: {
-                    return {error: 'Something went wrong'}
-                }
-            }
-        }
+  try {
+    await signIn("credentials", rawFormData);
+  } catch (error) { 
+    // if (error instanceof AuthError) {
+    //   switch (error.type) {
+    //     case "CredentialsSignin":
+    //       return { error: "Invalid credentials!" };
+    //     default:
+    //       return { error: "Something went wrong!" };
+    //   }
+    // }
 
-        throw e;
-    }
-    revalidatePath('/')
-}
+    throw error;
+  }
+  revalidatePath("/");
+};
