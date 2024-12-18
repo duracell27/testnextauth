@@ -12,7 +12,6 @@ import {
 
 import { Separator } from "@/components/ui/separator";
 import { auth } from "@/auth";
-import { Button } from "@/components/ui/button";
 import { Pencil, Trash2 } from "lucide-react";
 import Confirm from "@/components/Confirm";
 import { deleteCurrency } from "@/actions/currency";

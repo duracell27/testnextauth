@@ -58,7 +58,8 @@ const Navbar = async () => {
                   <DropdownMenuLabel>My Account</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   {session?.user?.role ==='ADMIN' && (<DropdownMenuItem><Link href="/adminPanel">Admin Panel</Link></DropdownMenuItem>)}
-                  <DropdownMenuItem><Link href="/profile">Profile</Link></DropdownMenuItem>
+                  <DropdownMenuItem><Link href="/dashboard">Дашборд</Link></DropdownMenuItem>
+                  <DropdownMenuItem><Link href="/profile">Профіль</Link></DropdownMenuItem>
                   <DropdownMenuItem>
                     <Logout />
                   </DropdownMenuItem>
